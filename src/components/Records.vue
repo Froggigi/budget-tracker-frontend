@@ -23,7 +23,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from '../api/axios'
+import {
+    getRecords,
+    createRecord,
+    updateRecord,
+    deleteRecord
+}  from '../api/records'
 
 // 記帳資料
 const records = ref([])
@@ -36,7 +41,7 @@ const newRecord = ref({ title: '', amount: 0 })
 // 1️⃣ GET 所有記帳（掛載時）
 const fetchRecords = async () => {
   try {
-    const res = await axios.get('/api/records')
+    const res = await getRecords()
     records.value = res.data
   } catch (err) {
     console.error('無法取得記帳資料',err.response?.data || err)
@@ -46,7 +51,7 @@ const fetchRecords = async () => {
 // 2️⃣ 新增記帳
 const handleADDRecords = (async () => {
     try {
-        const res = await axios.post('/api/records', newRecord.value)
+        const res = await createRecord(newRecord.value)
         records.value.push(res.data)  // 更新畫面
         newRecord.value = { title:'', amount:0 } // 清空畫面 
     }catch (err) {
@@ -57,7 +62,7 @@ const handleADDRecords = (async () => {
 // 3️⃣ 更新記帳
 const handleUpdateRecord = async () => {
     try {
-        const res = await axios.put(`/api/records/${record.id}`,record)
+        const res = await updateRecord(record.id,record)
         console.log('更新成功', res.data)
     }catch (err) {
         console.log( '更新失敗', err.response?.data || err)
@@ -67,7 +72,7 @@ const handleUpdateRecord = async () => {
 // 4️⃣ 刪除記帳
 const handleDeleteRecord = async () => {
     try {
-        res = await axios.delete(`/api/records/${id}`)
+        res = await deleteRecord(id)
         records.value = records.value.filter(r => r.id !== id) // 更新畫面
     }catch (err) {
         console.log('刪除失敗', err.response?.data || err)

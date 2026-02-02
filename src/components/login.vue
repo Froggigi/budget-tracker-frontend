@@ -19,10 +19,12 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 
 const email = ref('')
 const password = ref('')
 const errorMessage = ref('')
+const router = useRouter()
 
 const handleLogin = async () => {
   errorMessage.value = ''
@@ -40,6 +42,8 @@ const handleLogin = async () => {
     // 合併寫法
     localStorage.setItem('token', res.data.token) 
     alert('登入成功！JWT 已存')
+    
+    router.push('/records')
   } catch (err) {
     // 前端錯誤訊息會優先顯示後端回傳的 message
     errorMessage.value = err.response?.data?.message || '登入失敗'
