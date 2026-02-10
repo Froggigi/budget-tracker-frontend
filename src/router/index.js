@@ -4,11 +4,17 @@ import Records from '../components/Records.vue'
 
 const routes = [
   {
-    path: '/',
+    path: "/",
+    redirect: '/login'
+  },
+  {
+    path: '/login',
+    name: 'Login',
     component: Login
   },
   {
     path: '/records',
+    name: 'Records',
     component: Records
   }
 ]
