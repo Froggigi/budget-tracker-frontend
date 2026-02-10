@@ -18,7 +18,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
+import api from '../utils/api'
 import { useRouter } from 'vue-router'
 
 const email = ref('')
@@ -29,7 +29,7 @@ const router = useRouter()
 const handleLogin = async () => {
   errorMessage.value = ''
   try {
-    const res = await axios.post('http://localhost:3000/auth/login', {
+    const res = await api.post('/auth/login', {
       email: email.value,
       password: password.value
     })
@@ -42,7 +42,7 @@ const handleLogin = async () => {
     // 合併寫法
     localStorage.setItem('token', res.data.token) 
     alert('登入成功！JWT 已存')
-    
+
     router.push('/records')
   } catch (err) {
     // 前端錯誤訊息會優先顯示後端回傳的 message
