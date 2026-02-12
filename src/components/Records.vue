@@ -18,12 +18,20 @@
         <button @click="handleDeleteRecord(record.id)">刪除</button>
       </li>
     </ul>
+
+    <!-- 總結金額 -->
+    <div class="SUMMARY">
+      <P>總收入:{{ totalIncome }}</P>
+      <P>總支出:{{ totalExpense }}</P>
+      <P>餘額:{{ balance}}</P>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '../utils/api'
+import { computed } from 'vue'
 
 // 記帳資料
 const records = ref([])
@@ -70,6 +78,23 @@ const handleDeleteRecord = async (id) => {
         console.log('刪除失敗', err.response?.data || err)
     }
 }
+
+const totalIncome = computed(() => {
+  return records.value
+    .filter(r => r.amount >0)
+    .reduce((sum, r) => sum + r.amount, 0)
+})
+
+const totalExpense = computed(() => {
+  return records.value
+    .filter(r => r.amount <0)
+    .reduce((sum, r) => sum + r.amount, 0)
+})
+
+const balance = computed(() => {
+  return totalIncome.value + totalExpense.value
+})
+
 onMounted(fetchRecords)
 </script>
 
@@ -88,5 +113,15 @@ input {
 button {
   margin: 5px;
   padding: 5px 10px;
+}
+.summary {
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+.summary p {
+  margin: 5px 0;
+  font-weight: bold;
 }
 </style>
