@@ -38,10 +38,11 @@ const handleLogin = async () => {
     // 分開寫法
     // const token = res.data.token
     // localStorage.setItem('token', token)
-
+    console.log('登入回傳資料', res.data)
     // 合併寫法
     localStorage.setItem('token', res.data.token) 
     alert('登入成功！JWT 已存')
+    console.log('存入後token:', localStorage.getItem('token'))
 
     router.push('/records')
   } catch (err) {

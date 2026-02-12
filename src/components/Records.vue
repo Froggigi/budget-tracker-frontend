@@ -4,7 +4,7 @@
 
     <!-- 新增記帳表單 -->
     <form @submit.prevent="handleAddRecord">
-      <input v-model="newRecord.title" placeholder="項目" required />
+      <input v-model="newRecord.name" placeholder="項目" required />
       <input v-model.number="newRecord.amount" placeholder="金額" required />
       <button type="submit">新增</button>
     </form>
@@ -12,7 +12,7 @@
     <!-- 記帳列表 -->
     <ul>
       <li v-for="record in records" :key="record.id">
-        <input v-model="record.title" />
+        <input v-model="record.name" />
         <input v-model.number="record.amount" />
         <button @click="handleUpdateRecord(record)">更新</button>
         <button @click="handleDeleteRecord(record.id)">刪除</button>
@@ -23,25 +23,17 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import {
-    getRecords,
-    createRecord,
-    updateRecord,
-    deleteRecord
-}  from '../api/records'
+import api from '../utils/api'
 
 // 記帳資料
 const records = ref([])
 // 新增記帳表單資料
-const newRecord = ref({ title: '', amount: 0 })
-// // 取得 JWT
-// const token = localStorage.getItem('token') 
-// console.log('JWT token:', token)
+const newRecord = ref({ name: '', amount: 0 })
 
 // 1️⃣ GET 所有記帳（掛載時）
 const fetchRecords = async () => {
   try {
-    const res = await getRecords()
+    const res = await api.get('/api/records')
     records.value = res.data
   } catch (err) {
     console.error('無法取得記帳資料',err.response?.data || err)
@@ -49,20 +41,20 @@ const fetchRecords = async () => {
 }
 
 // 2️⃣ 新增記帳
-const handleADDRecords = (async () => {
+const handleAddRecord = async () => {
     try {
-        const res = await createRecord(newRecord.value)
+        const res = await api.post('/api/records', newRecord.value)
         records.value.push(res.data)  // 更新畫面
-        newRecord.value = { title:'', amount:0 } // 清空畫面 
+        newRecord.value = { name:'', amount:0 } // 清空畫面 
     }catch (err) {
         console.error('新增失敗', err.response?.data || err)
     }
-})
+}
 
 // 3️⃣ 更新記帳
-const handleUpdateRecord = async () => {
+const handleUpdateRecord = async (record) => {
     try {
-        const res = await updateRecord(record.id,record)
+        const res = await api.put(`/api/records/${record.id}`,record)
         console.log('更新成功', res.data)
     }catch (err) {
         console.log( '更新失敗', err.response?.data || err)
@@ -70,9 +62,9 @@ const handleUpdateRecord = async () => {
 }
 
 // 4️⃣ 刪除記帳
-const handleDeleteRecord = async () => {
+const handleDeleteRecord = async (id) => {
     try {
-        res = await deleteRecord(id)
+        const res = await api.delete(`/api/records/${id}`)
         records.value = records.value.filter(r => r.id !== id) // 更新畫面
     }catch (err) {
         console.log('刪除失敗', err.response?.data || err)
