@@ -18,7 +18,7 @@
 ---
 
 ## 📂 專案架構
-
+```
 budget-tracker-frontend
 ├─ src
 │  ├─ views
@@ -32,7 +32,7 @@ budget-tracker-frontend
 │  └─ main.js
 ├─ package.json
 └─ vite.config.js
-
+```
 ---
 
 ## 🔐 身分驗證流程（JWT）
