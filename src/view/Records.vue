@@ -11,11 +11,11 @@
 
     <!-- 記帳列表 -->
     <ul class="record-list">
-      <li v-for="record in records" :key="record.id">
+      <li v-for="record in records" :key="record.id || record._id">
         <input v-model="record.name" />
         <input v-model.number="record.amount" />
         <button @click="handleUpdateRecord(record)">更新</button>
-        <button @click="handleDeleteRecord(record.id)">刪除</button>
+        <button @click="handleDeleteRecord(record.id || record._id)">刪除</button>
       </li>
     </ul>
 
