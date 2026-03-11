@@ -82,7 +82,7 @@ const handleAddRecord = async () => {
 // 3️⃣ 更新記帳
 const handleUpdateRecord = async (record) => {
     try {
-        const res = await api.put(`/api/records/${record.id}`,record)
+        const res = await api.put(`/api/records/${record._id}`,record)
         console.log('更新成功', res.data)
     }catch (err) {
         console.log( '更新失敗', err.response?.data || err)
@@ -93,7 +93,7 @@ const handleUpdateRecord = async (record) => {
 const handleDeleteRecord = async (id) => {
     try {
         const res = await api.delete(`/api/records/${id}`)
-        records.value = records.value.filter(r => r.id !== id) // 更新畫面
+        records.value = records.value.filter(r => r._id !== id) // 更新畫面
     }catch (err) {
         console.log('刪除失敗', err.response?.data || err)
     }
